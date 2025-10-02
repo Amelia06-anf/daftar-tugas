@@ -1,0 +1,13 @@
+# Secrets
+.env
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editor/OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store

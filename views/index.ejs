@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Daftar Tugas Pribadi</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <h1>📋 Daftar Tugas</h1>
+
+  <button onclick="openForm()">+ Tambah Tugas</button>
+
+  <div id="formModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeForm()">&times;</span>
+      <h2>Tambah Tugas</h2>
+      <input type="text" id="judul" placeholder="Judul Tugas">
+      <textarea id="deskripsi" placeholder="Deskripsi"></textarea>
+      <input type="date" id="deadline">
+      <select id="status">
+        <option value="Belum Selesai">Belum Selesai</option>
+        <option value="Proses">Proses</option>
+        <option value="Selesai">Selesai</option>
+      </select>
+      <button onclick="simpanTugas()">Simpan</button>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditForm()">&times;</span>
+      <h2>Edit Tugas</h2>
+      <input type="hidden" id="editId">
+      <input type="text" id="editJudul" placeholder="Judul Tugas">
+      <textarea id="editDeskripsi" placeholder="Deskripsi"></textarea>
+      <input type="date" id="editDeadline">
+      <select id="editStatus">
+        <option value="Belum Selesai">Belum Selesai</option>
+        <option value="Proses">Proses</option>
+        <option value="Selesai">Selesai</option>
+      </select>
+      <button onclick="updateTugas()">Update</button>
+    </div>
+  </div>
+
+  <div id="daftarTugas"></div>
+
+  <script>
+    const API_URL = "/tugas";
+    function fetchTugas() {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById("daftarTugas");
+          container.innerHTML = "";
+          data.forEach(tugas => {
+            container.innerHTML += `
+              <div class="card">
+                <h3>${tugas.judul}</h3>
+                <p>${tugas.deskripsi}</p>
+                <p><b>Deadline:</b> ${tugas.deadline ?? ''}</p>
+                <p><b>Status:</b> ${tugas.status}</p>
+                <button onclick="editTugas(${tugas.id})">Edit</button>
+                <button onclick="hapusTugas(${tugas.id})">Hapus</button>
+              </div>
+            `;
+          });
+        });
+    }
+    function openForm() { document.getElementById("formModal").style.display = "flex"; }
+    function closeForm() { document.getElementById("formModal").style.display = "none"; }
+    function simpanTugas() {
+      const data = {
+        judul: document.getElementById("judul").value,
+        deskripsi: document.getElementById("deskripsi").value,
+        deadline: document.getElementById("deadline").value,
+        status: document.getElementById("status").value
+      };
+      fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+        .then(() => { closeForm(); fetchTugas(); });
+    }
+    function editTugas(id) {
+      fetch(`${API_URL}`)
+        .then(res => res.json())
+        .then(data => {
+          const tugas = data.find(t => t.id === id);
+          if (tugas) {
+            document.getElementById("editId").value = tugas.id;
+            document.getElementById("editJudul").value = tugas.judul;
+            document.getElementById("editDeskripsi").value = tugas.deskripsi;
+            document.getElementById("editDeadline").value = (tugas.deadline || '').slice(0,10);
+            document.getElementById("editStatus").value = tugas.status;
+            document.getElementById("editModal").style.display = "flex";
+          }
+        });
+    }
+    function closeEditForm() { document.getElementById("editModal").style.display = "none"; }
+    function updateTugas() {
+      const id = document.getElementById("editId").value;
+      const data = {
+        judul: document.getElementById("editJudul").value,
+        deskripsi: document.getElementById("editDeskripsi").value,
+        deadline: document.getElementById("editDeadline").value,
+        status: document.getElementById("editStatus").value
+      };
+      fetch(`${API_URL}/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+        .then(() => { closeEditForm(); fetchTugas(); });
+    }
+    function hapusTugas(id) { fetch(`${API_URL}/${id}`, { method: "DELETE" }).then(() => fetchTugas()); }
+    window.onload = fetchTugas;
+  </script>
+</body>
+</html>
