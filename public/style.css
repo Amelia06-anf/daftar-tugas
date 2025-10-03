@@ -1,6 +1,106 @@
-body { font-family: Arial, sans-serif; margin: 20px; }
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); align-items: center; justify-content: center; }
-.modal-content { background: #fff; padding: 16px; border-radius: 8px; width: 90%; max-width: 500px; }
-.close { float: right; cursor: pointer; font-size: 20px; }
-.card { border: 1px solid #ddd; padding: 12px; margin: 8px 0; border-radius: 8px; }
-button { cursor: pointer; padding: 8px 12px; margin-right: 8px; }
+/* Font & Warna */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #F4ECE6; /* warna latar lembut */
+  color: #3B1C1C;      /* warna teks utama */
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #3B1C1C;
+}
+
+/* Tombol utama */
+button {
+  background: #B08974;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 14px;
+}
+button:hover {
+  background: #8C5C4A;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.close {
+  float: right;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: bold;
+  color: #8C5C4A;
+}
+.close:hover { color: #3B1C1C; }
+
+/* Input form */
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #FDFBF9;
+}
+
+/* Card daftar tugas */
+#daftarTugas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+}
+.card h3 {
+  margin-top: 0;
+  color: #3B1C1C;
+}
+.card p {
+  font-size: 14px;
+  margin: 6px 0;
+}
